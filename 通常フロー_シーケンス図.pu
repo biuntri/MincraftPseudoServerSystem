@@ -1,0 +1,71 @@
+@startuml 通常フロー
+title 通常フロー
+participant Minecraft as HM 
+actor HostPlayer
+participant System as HS
+participant Strage
+participant System as GS
+actor GestPlayer
+participant Minecraft as GM
+
+activate Strage
+
+activate HostPlayer
+== ホスト起動 ==
+HostPlayer -> HS : 起動
+activate HS
+HS -> Strage : ワールド情報要求
+Strage -> HS
+HostPlayer -> HS : ワールド選択・プレイ
+HS -> Strage : アクセス情報要求
+Strage -> HS : 現在アクセス無し\nリポジトリデータ送信
+HS -> HM : データ送信、起動
+
+activate HM
+HostPlayer -> HM : 遊ぶ
+
+== ゲスト起動 ==
+
+activate GestPlayer
+GestPlayer -> GS : 起動
+activate GS
+GS -> Strage : ワールド情報要求
+Strage -> GS
+GestPlayer -> GS : ワールド選択・プレイ
+GS -> Strage : アクセス情報要求
+Strage -> GS : 現在アクセスあり
+GS -> GM : 起動
+activate GM
+GestPlayer -> GM : 遊ぶ
+GM -> HM : アクセス
+== ゲストが遊ぶ ==
+
+== ゲスト終了処理開始 ==
+
+GM -> HM : アクセス終了
+GM -> GS : 終了通知
+deactivate GM
+GS -> Strage : ログアウト処理
+Strage -> GS : 処理完了通知
+GS -> GestPlayer : 終了通知
+deactivate GS
+== ゲスト終了処理完了 ==
+
+== ホスト終了処理開始 ==
+
+HM -> HS : 終了通知
+deactivate HM
+HS -> Strage : WD更新通知
+HS -> Strage : リポジトリデータ送信
+Strage -> HS : WD更新完了通知
+HS -> Strage : ログアウト処理
+Strage -> HS : 処理終了通知
+HS -> HostPlayer : 終了通知
+
+deactivate HS
+
+== ホスト終了処理終了 ==
+
+
+
+@enduml
