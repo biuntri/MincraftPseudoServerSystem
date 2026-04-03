@@ -57,7 +57,7 @@ Requirementで列挙したライブラリなどのインストール方法を説
  
 * biuntri
 * 京大マイコンクラブ
-* E-mail　biuntri.213@gmail.com
+* 連絡は GitHub プロフィールまたは Issue からお願いします
  
 # License
 ライセンスを明示する
