@@ -1,0 +1,128 @@
+@startuml クラス図_全体構成
+hide empty members
+
+class Manager{
+    + void Init()
+    + void ImportWorldData()
+    + void Setting()
+}
+
+class WorldDataManager{
+    + bool TryImport()
+    + bool TryExport()
+}
+
+interface StrageManager{
+    - Repository リポジトリ
+    + bool TryGetRepository()
+    + bool TrySetRepository()
+}
+
+class LocalStrageManager{}
+
+
+class ClaudStrageManager{}
+
+class ZipManager{
+    + bool Try圧縮()
+    + bool Try解凍()
+}
+
+class Repository{
+    + zip形式 ワールドデータ
+    + 画像 タイトル画像
+    + string ワールド名
+    + Hoge オンラインストレージの保存位置
+}
+
+database オンラインストレージ{
+
+}
+
+database ローカル{
+
+}
+
+class Logger{
+    + void ログ出力()
+}
+
+class HogeLogger{
+    - 出力先設定
+    + void ログ出力()
+}
+
+cloud ログ出力対象{
+
+}
+
+class MainMenuView{
+    - void ワールド読み込み()
+    - void 設定()
+    - void ワールド追加()
+}
+
+
+'Selecting : 選択中のワールド番号
+class MainMenuVM{
+    - Manager manager
+    - Repository[] Worlds
+    - int Selecting
+    - string WorldName
+    - string Log
+    + void EntryPoint()
+}
+
+class SettingView{
+
+}
+
+class SettingVM{
+    - Manager manager
+    + void EntryPoint()
+}
+
+class WorldAddingView{
+
+}
+
+class WorldAddingVM{
+    - Manager manager
+    + void EntryPoint()
+}
+
+
+'UI
+MainMenuView <-> MainMenuVM : データバインディング
+MainMenuVM --> Manager
+MainMenuVM ..> Logger
+
+SettingView <-left-> SettingVM : データバインディング
+SettingVM ---> Manager
+
+WorldAddingView <-> WorldAddingVM : データバインディング
+WorldAddingVM --> Manager
+
+MainMenuVM ---> SettingVM
+MainMenuVM --> WorldAddingVM
+'End UI
+
+Manager --> WorldDataManager
+WorldDataManager "1" --> "2..*" StrageManager
+ClaudStrageManager "1" --o "1" Repository
+LocalStrageManager "1" --o "1" Repository
+Repository "2..*" --> "1" ZipManager
+ClaudStrageManager --> オンラインストレージ
+LocalStrageManager --> ローカル
+
+Manager --> Logger
+Logger --> HogeLogger
+HogeLogger --> ログ出力対象
+
+'impliments
+StrageManager <|-- LocalStrageManager
+StrageManager <|-- ClaudStrageManager
+'End impliments
+
+
+@enduml
